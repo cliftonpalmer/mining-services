@@ -4,4 +4,11 @@ use warnings;
 
 use CGI qw/ :standard /;
 
-print header, pre(`/usr/bin/ssh cpalmer\@miner1 "nvidia-smi"`);
+for my $hostname (qw/ miner1 /) {
+	print header,
+	p(
+		hr,
+		h3($hostname),
+		pre(`/usr/bin/ssh cpalmer\@$hostname "nvidia-smi"`)
+	)
+}
