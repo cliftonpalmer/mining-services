@@ -19,8 +19,8 @@ my @wallet_table = (
 		wallet => $gbx_wallet,
 		balance => $gbx_wallet_balance,
 		price_usd => $gbx_ticker->[0]->{price_usd},
-		balance_usd => sprintf '%.2f', 
-			$gbx_wallet_balance * $gbx_ticker->[0]->{price_usd},
+		balance_usd => sprintf('%.2f', $gbx_wallet_balance * $gbx_ticker->[0]->{price_usd}),
+		uri => "https://us1.gobyte.network/?address=$gbx_wallet",
 	}
 );
 
@@ -70,7 +70,7 @@ __DATA__
 	<TMPL_LOOP name=wallet_table>
 		<tr>
 			<td><TMPL_VAR name=symbol /></td>
-			<td><TMPL_VAR name=wallet /></td>
+			<td><a href="<TMPL_VAR name=uri />" target="_blank"><TMPL_VAR name=wallet /></a></td>
 			<td><TMPL_VAR name=balance /></td>
 			<td>$<TMPL_VAR name=price_usd /></td>
 			<td>$<TMPL_VAR name=balance_usd /></td>
