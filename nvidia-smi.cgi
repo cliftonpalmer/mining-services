@@ -50,31 +50,37 @@ __DATA__
 </head>
 <body>
 	<!--- wallet info -->
-	<table border=1>
-		<th>
-			<td>symbol</td>
-			<td>wallet</td>
-			<td>balance</td>
-			<td>price per coin (USD)</td>
-			<td>balance (USD)</td>
-		</th>
+	<p>
+	<table border=1 cellpadding="5" width="100%">
+		<tr>
+			<th>symbol</th>
+			<th>wallet</th>
+			<th>balance</th>
+			<th>price per coin (USD)</th>
+			<th>balance (USD)</th>
+		</tr>
 	<TMPL_LOOP name=wallet_table>
 		<tr>
 			<td><TMPL_VAR name=symbol /></td>
 			<td><TMPL_VAR name=wallet /></td>
 			<td><TMPL_VAR name=balance /></td>
-			<td><TMPL_VAR name=price_usd /></td>
-			<td><TMPL_VAR name=balance_usd /></td>
+			<td>$<TMPL_VAR name=price_usd /></td>
+			<td>$<TMPL_VAR name=balance_usd /></td>
 		</tr>
 	</TMPL_LOOP>
 	</table>
+	</p>
+
+	<hr>
 
 	<!--- miner info -->
-	<table border=1>
+	<p>
+	<table border=1 cellpadding="5" width="100%">
 	<TMPL_LOOP name=miner_table>
 		<tr><td><b><TMPL_VAR name=hostname /></b></td></tr>
 		<tr><td><pre><TMPL_VAR name=nvidia_smi /></pre></td></tr>
 	</TMPL_LOOP>
 	</table>
+	</p>
 </body>
 </html>
