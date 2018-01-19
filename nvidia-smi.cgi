@@ -39,6 +39,7 @@ my $template = HTML::Template->new(
 	filehandle => *DATA,
 	die_on_bad_params => 0,
 );
+$template->param( date_utc => `date -u` );
 $template->param( wallet_table => \@wallet_table );
 $template->param( miner_table => \@miner_table );
 
@@ -49,6 +50,13 @@ __DATA__
 <head>
 </head>
 <body>
+	<!--- UTC is helpful for knowing payouts and stuff -->
+	<p>
+	<TMPL_VAR name=date_utc />
+	</p>
+
+	<hr>
+
 	<!--- wallet info -->
 	<p>
 	<table border=1 cellpadding="5" width="100%">
