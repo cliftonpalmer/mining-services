@@ -27,7 +27,7 @@ my @wallet_table = (
 # build table data from each miner host
 my @miner_table = ();
 for my $hostname (qw/ miner1 /) {
-	my $nvidia_smi = `/usr/bin/ssh cpalmer\@$hostname "nvidia-smi"`;
+	my $nvidia_smi = `/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "nvidia-smi"`;
 	push @miner_table, {
 		hostname => $hostname,
 		nvidia_smi => $nvidia_smi,
