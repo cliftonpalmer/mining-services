@@ -48,6 +48,11 @@ print header, $template->output
 __DATA__
 <html>
 <head>
+<style>
+body {
+	background-color: lightgray;
+}
+</style>
 </head>
 <body>
 	<!--- UTC is helpful for knowing payouts and stuff -->
