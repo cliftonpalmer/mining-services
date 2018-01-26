@@ -28,9 +28,11 @@ my @wallet_table = (
 my @miner_table = ();
 for my $hostname (qw/ miner1 /) {
 	my $nvidia_smi = `/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "nvidia-smi"`;
+	my $systemctl_status = `/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "systemctl status gobyte-ccminer.service"`;
 	push @miner_table, {
 		hostname => $hostname,
 		nvidia_smi => $nvidia_smi,
+		systemctl_status => $systemctl_status,
 	};
 }
 
@@ -92,6 +94,7 @@ body {
 	<TMPL_LOOP name=miner_table>
 		<tr><td><b><TMPL_VAR name=hostname /></b></td></tr>
 		<tr><td><pre><TMPL_VAR name=nvidia_smi /></pre></td></tr>
+		<tr><td><pre><TMPL_VAR name=systemctl_status /></pre></td></tr>
 	</TMPL_LOOP>
 	</table>
 	</p>
