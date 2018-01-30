@@ -9,7 +9,7 @@ use JSON;
 # build wallet table data
 my $gbx_wallet = 'GcypgZPyMVWWFv9kG9uCmWPG1ZeZSyE7Z7';
 my $gbx_wallet_balance =
-	`curl -s http://gobyte.ezmine.io/ext/getbalance/$gbx_wallet`;
+	`./gobyte_balance.sh`;
 my $gbx_ticker =
 	from_json(`curl -s https://api.coinmarketcap.com/v1/ticker/gobyte/`);
 
