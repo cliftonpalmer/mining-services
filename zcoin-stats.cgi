@@ -9,14 +9,16 @@ use JSON;
 # build wallet table data
 # https://github.com/miningpoolhub/php-mpos/wiki/API-Reference
 my $token = $ENV{MININGPOOLHUB_API_TOKEN};
-my $json_balance =
-	from_json(`curl -s "https://zcoin.miningpoolhub.com/index.php?page=api&action=getuserbalance&api_key=$token&id=307328"`);
+my $json_dashboard =
+	from_json(`curl -s "https://zcoin.miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=$token&id=307328"`);
 my $json_ticker =
 	from_json(`curl -s https://api.coinmarketcap.com/v1/ticker/zcoin/`);
 
 my $symbol = $json_ticker->[0]->{symbol};
-my $confirmed_balance = $json_balance->{getuserbalance}{data}{confirmed};
-my $unconfirmed_balance = $json_balance->{getuserbalance}{data}{unconfirmed};
+my $confirmed_balance = $json_dashboard->{getdashboarddata}{data}{balance}{confirmed};
+my $unconfirmed_balance = $json_dashboard->{getdashboarddata}{data}{balance}{unconfirmed};
+my $earned_last_24h = $json_dashboard->{getdashboarddata}{data}{recent_credits_24hours}{amount};
+
 my $zcoin_price_usd = $json_ticker->[0]->{price_usd};
 
 my @wallet_table = (
@@ -27,6 +29,8 @@ my @wallet_table = (
 		price_usd => $zcoin_price_usd,
 		confirmed_balance_usd => sprintf('%.2f', $confirmed_balance * $zcoin_price_usd),
 		unconfirmed_balance_usd => sprintf('%.2f', $unconfirmed_balance * $zcoin_price_usd),
+		earned_last_24h => $earned_last_24h,
+		earned_last_24h_usd  => sprintf('%.2f', $earned_last_24h * $zcoin_price_usd),
 		uri => "https://zcoin.miningpoolhub.com/index.php?page=dashboard",
 	}
 );
@@ -82,6 +86,8 @@ body {
 			<th>confirmed balance (USD)</th>
 			<th>unconfirmed balance (USD)</th>
 			<th>URI</th>
+			<th>Earned last 24 hours</th>
+			<th>Earned last 24 hours (USD)</th>
 		</tr>
 	<TMPL_LOOP name=wallet_table>
 		<tr>
@@ -92,6 +98,8 @@ body {
 			<td>$<TMPL_VAR name=confirmed_balance_usd /></td>
 			<td>$<TMPL_VAR name=unconfirmed_balance_usd /></td>
 			<td><a href="<TMPL_VAR name=uri />">MiningPoolHub</a></td>
+			<td><TMPL_VAR name=earned_last_24h /></td>
+			<td>$<TMPL_VAR name=earned_last_24h_usd /></td>
 		</tr>
 	</TMPL_LOOP>
 	</table>
