@@ -25,7 +25,8 @@ my @wallet_table = (
 		confirmed_balance => $confirmed_balance,
 		unconfirmed_balance => $unconfirmed_balance,
 		price_usd => $zcoin_price_usd,
-		balance_usd => sprintf('%.2f', $confirmed_balance * $zcoin_price_usd),
+		confirmed_balance_usd => sprintf('%.2f', $confirmed_balance * $zcoin_price_usd),
+		unconfirmed_balance_usd => sprintf('%.2f', $unconfirmed_balance * $zcoin_price_usd),
 		uri => "https://zcoin.miningpoolhub.com/index.php?page=dashboard",
 	}
 );
@@ -78,7 +79,8 @@ body {
 			<th>confirmed balance</th>
 			<th>unconfirmed balance</th>
 			<th>price per coin (USD)</th>
-			<th>balance (USD)</th>
+			<th>confirmed balance (USD)</th>
+			<th>unconfirmed balance (USD)</th>
 			<th>URI</th>
 		</tr>
 	<TMPL_LOOP name=wallet_table>
@@ -87,7 +89,8 @@ body {
 			<td><TMPL_VAR name=confirmed_balance /></td>
 			<td><TMPL_VAR name=unconfirmed_balance /></td>
 			<td>$<TMPL_VAR name=price_usd /></td>
-			<td>$<TMPL_VAR name=balance_usd /></td>
+			<td>$<TMPL_VAR name=confirmed_balance_usd /></td>
+			<td>$<TMPL_VAR name=unconfirmed_balance_usd /></td>
 			<td><a href="<TMPL_VAR name=uri />">MiningPoolHub</a></td>
 		</tr>
 	</TMPL_LOOP>
