@@ -58,7 +58,7 @@ $template->param( date_utc => `date -u` );
 $template->param( wallet_table => \@wallet_table );
 $template->param( miner_table => \@miner_table );
 
-print header, $template->output
+print header( -type => 'text/html', -charset => 'utf-8' ), $template->output
 
 __DATA__
 <html>
