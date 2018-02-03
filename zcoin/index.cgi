@@ -99,7 +99,7 @@ body {
 			<td>$<TMPL_VAR name=price_usd /></td>
 			<td>$<TMPL_VAR name=confirmed_balance_usd /></td>
 			<td>$<TMPL_VAR name=unconfirmed_balance_usd /></td>
-			<td><a href="<TMPL_VAR name=uri />">MiningPoolHub</a></td>
+			<td><a href="<TMPL_VAR name=uri />" target="_blank">MiningPoolHub</a></td>
 			<td><TMPL_VAR name=earned_last_24h /></td>
 			<td>$<TMPL_VAR name=earned_last_24h_usd /></td>
 		</tr>
