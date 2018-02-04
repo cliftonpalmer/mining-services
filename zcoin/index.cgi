@@ -32,6 +32,7 @@ my @wallet_table = (
 		earned_last_24h => $earned_last_24h,
 		earned_last_24h_usd  => sprintf('%.2f', $earned_last_24h * $zcoin_price_usd),
 		uri => "https://zcoin.miningpoolhub.com/index.php?page=dashboard",
+		earning_monthly_usd => sprintf('%.2f', $earned_last_24h * $zcoin_price_usd * 30),
 	}
 );
 
@@ -90,6 +91,7 @@ body {
 			<th>URI</th>
 			<th>Earned last 24 hours</th>
 			<th>Earned last 24 hours (USD)</th>
+			<th>Earning monthly (USD)</th>
 		</tr>
 	<TMPL_LOOP name=wallet_table>
 		<tr>
@@ -102,6 +104,7 @@ body {
 			<td><a href="<TMPL_VAR name=uri />" target="_blank">MiningPoolHub</a></td>
 			<td><TMPL_VAR name=earned_last_24h /></td>
 			<td>$<TMPL_VAR name=earned_last_24h_usd /></td>
+			<td>$<TMPL_VAR name=earning_monthly_usd /></td>
 		</tr>
 	</TMPL_LOOP>
 	</table>
