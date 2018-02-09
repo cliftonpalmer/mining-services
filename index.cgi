@@ -46,7 +46,7 @@ for my $hostname (qw/ miner1 /) {
 	my $nvidia_smi =
 		`/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "nvidia-smi"`;
 	my $systemctl_status =
-		`/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "systemctl status ethminer.service"`;
+		`/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "systemctl status $coin.service"`;
 	push @miner_table, {
 		hostname => $hostname,
 		nvidia_smi => $nvidia_smi,
