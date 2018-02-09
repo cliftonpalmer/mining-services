@@ -6,34 +6,37 @@ use HTML::Template;
 use CGI qw/ :standard /;
 use JSON;
 
+my $coin = param('coin');
+$coin = 'zcoin' unless $coin;
+
 # build wallet table data
 # https://github.com/miningpoolhub/php-mpos/wiki/API-Reference
 my $token = $ENV{MININGPOOLHUB_API_TOKEN};
 my $json_dashboard =
-	from_json(`curl -s "https://zcoin.miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=$token&id=307328"`);
+	from_json(`curl -s "https://$coin.miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=$token&id=307328"`);
 my $json_ticker =
-	from_json(`curl -s https://api.coinmarketcap.com/v1/ticker/zcoin/`);
+	from_json(`curl -s https://api.coinmarketcap.com/v1/ticker/$coin/`);
 
 my $symbol = $json_ticker->[0]->{symbol};
 my $confirmed_balance = $json_dashboard->{getdashboarddata}{data}{balance}{confirmed};
 my $unconfirmed_balance = $json_dashboard->{getdashboarddata}{data}{balance}{unconfirmed};
 my $earned_last_24h = $json_dashboard->{getdashboarddata}{data}{recent_credits_24hours}{amount};
 
-my $zcoin_price_usd = $json_ticker->[0]->{price_usd};
+my $coin_price_usd = $json_ticker->[0]->{price_usd};
 
 my @wallet_table = (
 	{
 		symbol => $symbol,
 		confirmed_balance => $confirmed_balance,
 		unconfirmed_balance => $unconfirmed_balance,
-		price_usd => $zcoin_price_usd,
-		confirmed_balance_usd => sprintf('%.2f', $confirmed_balance * $zcoin_price_usd),
-		unconfirmed_balance_usd => sprintf('%.2f', $unconfirmed_balance * $zcoin_price_usd),
+		price_usd => $coin_price_usd,
+		confirmed_balance_usd => sprintf('%.2f', $confirmed_balance * $coin_price_usd),
+		unconfirmed_balance_usd => sprintf('%.2f', $unconfirmed_balance * $coin_price_usd),
 		earned_last_24h => $earned_last_24h,
-		earned_last_24h_usd  => sprintf('%.2f', $earned_last_24h * $zcoin_price_usd),
-		uri => "https://zcoin.miningpoolhub.com/index.php?page=dashboard",
-		earning_monthly_usd => sprintf('%.2f', $earned_last_24h * $zcoin_price_usd * 30),
-		earning_yearly_usd => sprintf('%.2f', $earned_last_24h * $zcoin_price_usd * 365.25),
+		earned_last_24h_usd  => sprintf('%.2f', $earned_last_24h * $coin_price_usd),
+		uri => "https://$coin.miningpoolhub.com/index.php?page=dashboard",
+		earning_monthly_usd => sprintf('%.2f', $earned_last_24h * $coin_price_usd * 30),
+		earning_yearly_usd => sprintf('%.2f', $earned_last_24h * $coin_price_usd * 365.25),
 	}
 );
 
@@ -43,7 +46,7 @@ for my $hostname (qw/ miner1 /) {
 	my $nvidia_smi =
 		`/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "nvidia-smi"`;
 	my $systemctl_status =
-		`/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "systemctl status zcoin-ccminer.service"`;
+		`/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "systemctl status ethminer.service"`;
 	push @miner_table, {
 		hostname => $hostname,
 		nvidia_smi => $nvidia_smi,
