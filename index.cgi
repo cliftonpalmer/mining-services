@@ -46,7 +46,7 @@ for my $hostname (qw/ miner1 /) {
 	my $nvidia_smi =
 		`/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "nvidia-smi"`;
 	my $systemctl_status =
-		`/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "systemctl status $coin.service"`;
+		`/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "systemctl status multi-algo; echo; systemctl status $coin"`;
 	push @miner_table, {
 		hostname => $hostname,
 		nvidia_smi => $nvidia_smi,
@@ -123,8 +123,8 @@ body {
 	<table border=1 cellpadding="5" width="100%">
 	<TMPL_LOOP name=miner_table>
 		<tr><td><b><TMPL_VAR name=hostname /></b></td></tr>
-		<tr><td><pre><TMPL_VAR name=nvidia_smi /></pre></td></tr>
 		<tr><td><pre><TMPL_VAR name=systemctl_status /></pre></td></tr>
+		<tr><td><pre><TMPL_VAR name=nvidia_smi /></pre></td></tr>
 	</TMPL_LOOP>
 	</table>
 	</p>
