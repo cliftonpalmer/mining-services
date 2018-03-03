@@ -41,19 +41,22 @@ my @wallet_table = (
 );
 
 # build table data from each miner host
-my @miner_table = ();
+my %miner_tables = ();
 for my $hostname (qw/ miner1 miner2 /) {
-	my $nvidia_smi =
-		`/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "nvidia-smi"`;
-	my $geth_stats =
-		`/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "~/bin/geth-stats"`;
-	my $systemctl_status =
-		`/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "systemctl status multi-algo; echo; systemctl status $coin"`;
-	push @miner_table, {
+	my $data = `/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "nvidia-smi"`;
+	push @{$miner_tables{nvidia}}, {
 		hostname => $hostname,
-		nvidia_smi => $nvidia_smi,
-		geth_stats => $geth_stats,
-		systemctl_status => $systemctl_status,
+		data     => $data
+	};
+	$data = `/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "~/bin/geth-stats"`;
+	push @{$miner_tables{gethd}}, {
+		hostname => $hostname,
+		data     => $data
+	};
+	$data = `/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "systemctl status multi-algo; echo; systemctl status $coin"`;
+	push @{$miner_tables{systemctl}}, {
+		hostname => $hostname,
+		data     => $data
 	};
 }
 
@@ -64,7 +67,10 @@ my $template = HTML::Template->new(
 );
 $template->param( date_utc => `date -u` );
 $template->param( wallet_table => \@wallet_table );
-$template->param( miner_table => \@miner_table );
+while (my ($name, $data) = each %miner_tables) {
+	$template->param( $name => $data );
+}
+
 
 print header( -type => 'text/html', -charset => 'utf-8' ), $template->output
 
@@ -123,14 +129,26 @@ body {
 
 	<!--- miner info -->
 	<p>
-	<table border=1 cellpadding="5" width="100%">
-	<TMPL_LOOP name=miner_table>
-		<tr><td><b><TMPL_VAR name=hostname /></b></td></tr>
-		<tr><td><pre><TMPL_VAR name=systemctl_status /></pre></td></tr>
-		<tr><td><pre><TMPL_VAR name=geth_stats /></pre></td></tr>
-		<tr><td><pre><TMPL_VAR name=nvidia_smi /></pre></td></tr>
-	</TMPL_LOOP>
-	</table>
+		<table border=1 cellpadding="5" width="100%">
+		<TMPL_LOOP name=systemctl>
+			<tr><td><b><TMPL_VAR name=hostname /></b></td></tr>
+			<tr><td><pre><TMPL_VAR name=data /></pre></td></tr>
+		</TMPL_LOOP>
+		</table>
+
+		<table border=1 cellpadding="5" width="100%">
+		<TMPL_LOOP name=nvidia>
+			<tr><td><b><TMPL_VAR name=hostname /></b></td></tr>
+			<tr><td><pre><TMPL_VAR name=data /></pre></td></tr>
+		</TMPL_LOOP>
+		</table>
+
+		<table border=1 cellpadding="5" width="100%">
+		<TMPL_LOOP name=gethd>
+			<tr><td><b><TMPL_VAR name=hostname /></b></td></tr>
+			<tr><td><pre><TMPL_VAR name=data /></pre></td></tr>
+		</TMPL_LOOP>
+		</table>
 	</p>
 </body>
 </html>
