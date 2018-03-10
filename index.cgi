@@ -58,6 +58,11 @@ for my $hostname (qw/ miner1 miner2 /) {
 		hostname => $hostname,
 		data     => $data
 	};
+	$data = `/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "df -h"`;
+	push @{$miner_tables{df}}, {
+		hostname => $hostname,
+		data     => $data
+	};
 }
 
 # set up template
@@ -145,6 +150,13 @@ body {
 
 		<table border=1 cellpadding="5" width="100%">
 		<TMPL_LOOP name=gethd>
+			<tr><td><b><TMPL_VAR name=hostname /></b></td></tr>
+			<tr><td><pre><TMPL_VAR name=data /></pre></td></tr>
+		</TMPL_LOOP>
+		</table>
+
+		<table border=1 cellpadding="5" width="100%">
+		<TMPL_LOOP name=df>
 			<tr><td><b><TMPL_VAR name=hostname /></b></td></tr>
 			<tr><td><pre><TMPL_VAR name=data /></pre></td></tr>
 		</TMPL_LOOP>
