@@ -7,7 +7,7 @@ use CGI qw/ :standard /;
 use JSON;
 
 my $coin = param('coin');
-$coin = 'zcoin' unless $coin;
+$coin = 'ethereum' unless $coin;
 
 # build wallet table data
 # https://github.com/miningpoolhub/php-mpos/wiki/API-Reference
