@@ -43,7 +43,7 @@ my @wallet_table = (
 # build table data from each miner host
 my %miner_tables = ();
 for my $hostname (qw/ miner1 miner2 /) {
-	my $data = `/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "nvidia-smi"`;
+	my $data = `/usr/bin/ssh -o ConnectTimeout=5 cpalmer\@$hostname "ps -u miner -o stat,args | grep ^Z && echo "Driver crashed" || nvidia-smi"`;
 	push @{$miner_tables{nvidia}}, {
 		hostname => $hostname,
 		data     => $data
