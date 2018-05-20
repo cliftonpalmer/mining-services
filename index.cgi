@@ -71,6 +71,7 @@ my $template = HTML::Template->new(
 	die_on_bad_params => 0,
 );
 $template->param( date_utc => `date -u` );
+$template->param( blockchain_uri => 'https://etherscan.io/address/0xd1bb2d62804f4e298f5260a5d03fea99504e9290' );
 $template->param( wallet_table => \@wallet_table );
 while (my ($name, $data) = each %miner_tables) {
 	$template->param( $name => $data );
@@ -91,7 +92,7 @@ body {
 <body>
 	<!--- UTC is helpful for knowing payouts and stuff -->
 	<p>
-	<TMPL_VAR name=date_utc />
+	<TMPL_VAR name=date_utc /> | <a href="<TMPL_VAR name=blockchain_uri />"><TMPL_VAR name=blockchain_uri /></a>
 	</p>
 
 	<hr>
